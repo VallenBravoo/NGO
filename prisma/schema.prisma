@@ -1,0 +1,57 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String?
+  role      String   @default("ADMIN")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  firstName String
+  lastName  String
+  email     String
+  phone     String?
+  message   String
+  status    String   @default("UNREAD") // UNREAD, READ, RESOLVED
+  createdAt DateTime @default(now())
+}
+
+model VolunteerApplication {
+  id           String   @id @default(cuid())
+  firstName    String
+  lastName     String
+  email        String
+  phone        String
+  interest     String
+  availability String
+  message      String
+  status       String   @default("PENDING") // PENDING, REVIEWED, APPROVED, REJECTED
+  createdAt    DateTime @default(now())
+}
+
+model Donation {
+  id            String   @id @default(cuid())
+  amount        Float
+  isMonthly     Boolean  @default(false)
+  stripeSession String?  @unique
+  status        String   @default("PENDING") // PENDING, COMPLETED, FAILED
+  donorEmail    String?
+  donorName     String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
